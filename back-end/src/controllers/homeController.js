@@ -1,5 +1,5 @@
 const db = require("../models/index");
-const { createUser } = require("../services/CRUDService");
+const { createUser, getAllUsers } = require("../services/CRUDService");
 
 const getHomePage = async (req, res) => {
     try {
@@ -26,8 +26,20 @@ const postCrud = async (req, res) => {
     return res.send(req.body);
 };
 
+const displayGetCRUD = async (req, res) => {
+    try {
+        const data = await getAllUsers();
+        return res.render("displayCrud.ejs", {
+            dataTable: data,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     getHomePage: getHomePage,
     getCRUD: getCRUD,
     postCrud: postCrud,
+    displayGetCRUD: displayGetCRUD,
 };
