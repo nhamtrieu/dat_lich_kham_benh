@@ -49,7 +49,49 @@ const getAllUsers = () => {
     });
 };
 
+const getUserById = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await db.User.findOne({
+                where: { id: id },
+                raw: true,
+            });
+            if (user) resolve(user);
+            else resolve([]);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+const updateUser = async (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await db.User.findOne({ where: { id: data.id } });
+            if (!user) resolve({ message: "User not found" });
+            await db.User.update(
+                {
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    address: data.address,
+                },
+                {
+                    where: {
+                        id: data.id,
+                    },
+                }
+            );
+            let allUser = await db.User.findAll();
+            resolve(allUser);
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 module.exports = {
     createUser: createUser,
     getAllUsers: getAllUsers,
+    getUserById: getUserById,
+    updateUser: updateUser,
 };

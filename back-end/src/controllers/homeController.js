@@ -1,5 +1,10 @@
 const db = require("../models/index");
-const { createUser, getAllUsers } = require("../services/CRUDService");
+const {
+    createUser,
+    getAllUsers,
+    getUserById,
+    updateUser,
+} = require("../services/CRUDService");
 
 const getHomePage = async (req, res) => {
     try {
@@ -37,9 +42,37 @@ const displayGetCRUD = async (req, res) => {
     }
 };
 
+const getEditCRUD = async (req, res) => {
+    try {
+        const userId = req.query.id;
+        if (userId) {
+            const userData = await getUserById(userId);
+            // console.log(userData);
+            res.render("editCrud.ejs", {
+                userData: userData,
+            });
+        } else {
+            return res.send("User not found");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const putCRUD = async (req, res) => {
+    let data = req.body;
+    // console.log(data);
+    let allUser = await updateUser(data);
+    return res.render("displayCrud.ejs", {
+        dataTable: allUser,
+    });
+};
+
 module.exports = {
     getHomePage: getHomePage,
     getCRUD: getCRUD,
     postCrud: postCrud,
     displayGetCRUD: displayGetCRUD,
+    getEditCRUD: getEditCRUD,
+    putCRUD: putCRUD,
 };
