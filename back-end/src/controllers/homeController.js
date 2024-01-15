@@ -4,6 +4,7 @@ const {
     getAllUsers,
     getUserById,
     updateUser,
+    deleteUser,
 } = require("../services/CRUDService");
 
 const getHomePage = async (req, res) => {
@@ -47,7 +48,6 @@ const getEditCRUD = async (req, res) => {
         const userId = req.query.id;
         if (userId) {
             const userData = await getUserById(userId);
-            // console.log(userData);
             res.render("editCrud.ejs", {
                 userData: userData,
             });
@@ -61,8 +61,16 @@ const getEditCRUD = async (req, res) => {
 
 const putCRUD = async (req, res) => {
     let data = req.body;
-    // console.log(data);
     let allUser = await updateUser(data);
+    return res.render("displayCrud.ejs", {
+        dataTable: allUser,
+    });
+};
+
+const deleteCRUD = async (req, res) => {
+    const id = req.query.id;
+    console.log(id);
+    const allUser = await deleteUser(id);
     return res.render("displayCrud.ejs", {
         dataTable: allUser,
     });
@@ -75,4 +83,5 @@ module.exports = {
     displayGetCRUD: displayGetCRUD,
     getEditCRUD: getEditCRUD,
     putCRUD: putCRUD,
+    deleteCRUD: deleteCRUD,
 };
